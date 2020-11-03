@@ -77,7 +77,7 @@ import { withKeepAlive } from 'react-next-keep-alive';
 
 const IndexPage = () => {
   // Disable loading from cache
-  keepAliveLoadFromCache('my-index-page', true);
+  keepAliveLoadFromCache('my-index-page', false);
 
   return (
     <>
