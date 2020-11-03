@@ -66,7 +66,7 @@ That's it!
 
 ## Helpers
 
-##### keepAliveLoadFromCache(name: string, enabled: boolean)
+#### keepAliveLoadFromCache(name: string, enabled: boolean)
 
 If you want to disable loading component from cache, use this method. Pass unique name that you gave to the component and boolean value of enabled/disabled.
 
@@ -89,7 +89,7 @@ const IndexPage = () => {
 export default withKeepAlive(IndexPage, 'my-index-page');
 ```
 
-##### useKeepAliveMountEffect(name: string, effect: Function)
+#### useKeepAliveMountEffect(name: string, effect: Function)
 
 If you need to know, when cache component is mounted, you can use this hook.
 You need to pass components unique name and effect function in order to use it.
@@ -101,7 +101,7 @@ This hook is accessible in any component, so you can use it for example in neste
   });
 ```
 
-##### useKeepAliveUnmountEffect(name: string, effect: Function)
+#### useKeepAliveUnmountEffect(name: string, effect: Function)
 
 If you need to know, when cache component is unmounted, you can use this hook.
 You need to pass components unique name and effect function in order to use it.
@@ -113,7 +113,7 @@ This hook is accessible in any component, so you can use it for example in neste
   });
 ```
 
-##### Disable restoring scroll position
+#### Disable restoring scroll position
 In order to disable restoring scroll position, add third argument to `withKeepAlive` HOC, which is boolean indicating whether you want to enable restoring scroll position.
 
 ```tsx
