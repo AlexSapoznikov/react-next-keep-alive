@@ -12,7 +12,7 @@
  * 2) Wrap components export with "withKeepAlive" and provide unique name like this: export default withKeepAlive(IndexPage, 'index');
  */
 import React, { useRef, memo, useEffect, ReactElement, cloneElement, Fragment } from 'react';
-import { useRouter } from 'next/router';
+import { NextRouter } from 'next/router';
 
 type KeepAliveCacheType = {
   [name: string]: {
@@ -30,19 +30,19 @@ type ExtendChildrenType = {
 };
 
 type KeepAliveProviderProps = {
-  children: ReactElement & ExtendChildrenType
+  children: ReactElement & ExtendChildrenType,
+  router: NextRouter
 };
 
 const defaultEnabled = true;
 
 const KeepAliveProvider = (props: KeepAliveProviderProps) => {
-  const { children } = props;
+  const { children, router } = props;
 
   const pageProps = children?.props;
   const componentData = cloneElement(children);
   const CurrentComponent = componentData?.type;
 
-  const router = useRouter();
   const keepAliveCache = useRef<KeepAliveCacheType>({});
 
   // @ts-ignore

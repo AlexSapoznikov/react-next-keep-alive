@@ -1,6 +1,7 @@
 # react-next-keep-alive
 
 Module for caching views in next.js (with restoring scroll position). It works almost like [react-keep-alive](https://www.npmjs.com/package/react-keep-alive) and [react-actication](https://www.npmjs.com/package/react-activation).
+Does not use external dependencies.
 
 This component is build on next.js router, so **it can be used with next.js only**. Like other similar modules, it also keeps cached view in separate hidden div.
 Basic logic was taken from this [answer to github issue](https://stackoverflow.com/a/61167944/7778723) (Thanks to @GusRuss89) and more logic was added to it (usage of HOC instead of routes, etc...).
@@ -33,8 +34,10 @@ import { AppProps } from 'next/app';
 import { KeepAliveProvider } from 'react-next-keep-alive';
 
 function MyApp ({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
   return (
-    <KeepAliveProvider>
+    <KeepAliveProvider router={router}>
       <Component {...pageProps} />
     </KeepAliveProvider>
   );
