@@ -12,6 +12,7 @@
  * 2) Wrap components export with "withKeepAlive" and provide unique name like this: export default withKeepAlive(IndexPage, 'index');
  */
 import React, { useRef, memo, useEffect, ReactElement, cloneElement, Fragment } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { NextRouter } from 'next/router';
 
 type KeepAliveCacheType = {
@@ -78,6 +79,8 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
   // Restore the scroll position of cached page
   const handleRouteChangeComplete = () => {
     if (isKeptAlive && isEnabled && keepScroll) {
+      window.scrollTo(0, keepAliveCache.current[name]?.scrollPos || 0);
+      // Just in case try again in next event loop
       setTimeout(() => {
         window.scrollTo(0, keepAliveCache.current[name]?.scrollPos || 0);
       }, 0);
@@ -85,7 +88,7 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
   };
 
   // Enable/disable loading from cache
-  const handleControls = (event) => {
+  const handleControls = (event: any) => {
     const { name: controlsName, enabled: controlsEnabled } = event?.detail || {};
     keepAliveCache.current[controlsName].enabled = controlsEnabled;
   };
