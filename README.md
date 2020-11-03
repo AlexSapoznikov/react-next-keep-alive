@@ -10,7 +10,7 @@ The reason for creating this was that:
 
 - *react-keep-alive* - Crashed my app because of different dom manipulations (like trying to remove or replace dom elements which are not present).
 Adding additional checks didn't solve the problem.
-- *react-activation* - Client side dom structure did not match server side dom structure. In addition, in stopped working from react 17.
+- *react-activation* - Client side dom structure did not match server side dom structure. In addition, it stopped working from react 17.
 
 
 *If you are not using next.js, there are some modules around that use react-router, so you can try those instead.*
