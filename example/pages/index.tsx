@@ -37,4 +37,7 @@ const IndexPage = () => {
   );
 };
 
-export default withKeepAlive(IndexPage, 'index');
+export default withKeepAlive(
+  IndexPage,
+  'index'
+);

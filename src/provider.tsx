@@ -18,15 +18,32 @@ import { NextRouter } from 'next/router';
 type KeepAliveCacheType = {
   [name: string]: {
     Component: any,
+    pageProps: any,
     scrollPos?: number,
     name?: string,
     enabled?: boolean
   }
 };
 
+type KeepAliveNameFnArgs = {
+  props: any,
+  router: NextRouter
+}
+
+export type KeepAliveName = string | ((nameArgs: KeepAliveNameFnArgs) => string)
+
+export type KeepAliveOptsProps = {
+  keepScrollEnabled?: boolean,
+  applyNewProps?: boolean | ((cachedProps: any, newProps: any) => Object)
+}
+
+type KeepAliveData = {
+  name: KeepAliveName
+} & KeepAliveOptsProps;
+
 type ExtendChildrenType = {
   type: {
-    keepAliveName?: string
+    keepAlive: KeepAliveData
   }
 };
 
@@ -43,19 +60,22 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
   const pageProps = children?.props;
   const componentData = cloneElement(children);
   const CurrentComponent = componentData?.type;
-
   const keepAliveCache = useRef<KeepAliveCacheType>({});
 
-  // @ts-ignore
-  const isKeptAlive = !!componentData?.type?.keepAliveName;
-  // @ts-ignore
-  const keepScroll = !!componentData?.type?.keepAliveKeepScroll;
-  // @ts-ignore
-  const name = componentData?.type?.keepAliveName;
+  const {
+    name: keepAliveName,
+    keepScrollEnabled,
+    applyNewProps
+    // @ts-ignore
+  } = componentData?.type?.keepAlive || {};
 
-  const isEnabled = keepAliveCache?.current?.[name]?.enabled !== undefined
-    ? !!keepAliveCache?.current?.[name]?.enabled
-    : defaultEnabled;
+  // KeepAlive name
+  const name = typeof keepAliveName === 'function'
+    ? keepAliveName({ props: pageProps, router })
+    : keepAliveName;
+  const isEnabled = () => keepAliveCache?.current?.[name]?.enabled;
+  const isKeptAlive = !!name;
+  const keepScroll = !!keepScrollEnabled;
 
   // Add Component to retainedComponents if we haven't got it already
   if (isKeptAlive && !keepAliveCache.current[name]) {
@@ -63,6 +83,7 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
     const MemoComponent = memo(Component);
     keepAliveCache.current[name] = {
       Component: MemoComponent,
+      pageProps,
       scrollPos: 0,
       name,
       enabled: defaultEnabled
@@ -78,7 +99,7 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
 
   // Restore the scroll position of cached page
   const handleRouteChangeComplete = () => {
-    if (isKeptAlive && isEnabled && keepScroll) {
+    if (isKeptAlive && isEnabled() && keepScroll) {
       window.scrollTo(0, keepAliveCache.current[name]?.scrollPos || 0);
       // Just in case try again in next event loop
       setTimeout(() => {
@@ -90,7 +111,10 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
   // Enable/disable loading from cache
   const handleControls = (event: any) => {
     const { name: controlsName, enabled: controlsEnabled } = event?.detail || {};
-    keepAliveCache.current[controlsName].enabled = controlsEnabled;
+
+    if (keepAliveCache.current[controlsName]) {
+      keepAliveCache.current[controlsName].enabled = controlsEnabled;
+    }
   };
 
   // Handle scroll position caching - requires an up-to-date router.asPath
@@ -135,22 +159,41 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
     };
   }, []);
 
+  const getCachedViewProps = (cachedProps) => {
+    // Apply new props
+    if (applyNewProps === true) {
+      return pageProps;
+    }
+
+    // Apply combination of old and new props
+    if (typeof applyNewProps === 'function') {
+      return applyNewProps(cachedProps, pageProps);
+    }
+
+    // Apply cached props
+    return cachedProps;
+  };
+
   return (
+    // eslint-disable-next-line react/jsx-fragments
     <Fragment>
-      <div style={{ display: (isKeptAlive && isEnabled) ? 'block' : 'none' }}>
+      <div style={{ display: (isKeptAlive && isEnabled()) ? 'block' : 'none' }}>
         {
-          Object.entries(keepAliveCache.current).map(([n, { Component }]: any) => (
+          Object.entries(keepAliveCache.current).map(([cacheName, { Component, pageProps: cachedProps }]: any) => (
             <div
-              key={n}
-              style={{ display: name === n ? 'block' : 'none' }}
+              key={cacheName}
+              style={{ display: name === cacheName ? 'block' : 'none' }}
             >
-              <Component {...pageProps} />
+              {
+
+              }
+              <Component {...getCachedViewProps(cachedProps)} />
             </div>
           ))
         }
       </div>
 
-      { (!isKeptAlive || !isEnabled) && children }
+      { (!isKeptAlive || !isEnabled()) && children }
     </Fragment>
   );
 };

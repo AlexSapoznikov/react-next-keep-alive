@@ -27,7 +27,9 @@ npm install --save react-next-keep-alive
 
 In your next.js project:
 
-* pages/_app.tsx ([create one, if not present](https://nextjs.org/docs/advanced-features/custom-app)): <br/> *Wrap your `<Component />` with `<KeepAliveProvider />`*
+#### pages/_app.tsx ([create one, if not present](https://nextjs.org/docs/advanced-features/custom-app)):
+
+Wrap your `<Component />` with `<KeepAliveProvider />`
 
 ```tsx
 import { AppProps } from 'next/app';
@@ -46,7 +48,9 @@ function MyApp ({ Component, pageProps }: AppProps) {
 export default MyApp;
 ```
 
-* pages/*.tsx: <br/> *For any component that you want to cache, wrap its export with `withKeepAlive` HOC and add **unique** name to it*
+#### pages/*.tsx:
+
+For any component that you want to cache, wrap its export with `withKeepAlive` HOC and add **unique** name to it
 
 ```tsx
 import React, { useState } from 'react';
@@ -63,6 +67,28 @@ export default withKeepAlive(IndexPage, 'my-unique-name');
 ```
 
 That's it!
+
+## withKeepAlive options
+
+There are some additional options available for `withKeepAlive` HOC:
+
+```
+withKeepAlive(Component, name: string | (({props, router}) => string), opts: Object)
+```
+
+#### name
+
+Name is a string or function that returns a string.
+<br/>
+`props` and nextjs `router` is passed to that function to help apply some more specific name, which might be needed for having multiple caches for the same component.
+
+#### opts
+
+| Key  | type | default | Description |
+| :--- | :--- | :--- | :--- |
+| keepScrollEnabled | *boolean* | true | Setting this to false will disable scroll restoration. By default it is true and scroll position is restored. |
+| applyNewProps  | *boolean* or *(cachedProps, newProps) => Object* | false | Default value of *false* mounts cached view with cached props. Setting this to *true* will apply new props to cached view. You can use a function here to decide which props to mount the component with - it gets cached props and new props as arguments and outputs combined props. |
+
 
 ## Helpers
 
@@ -113,13 +139,9 @@ This hook is accessible in any component, so you can use it for example in neste
   });
 ```
 
-#### Disable restoring scroll position
-In order to disable restoring scroll position, add third argument to `withKeepAlive` HOC, which is boolean indicating whether you want to enable restoring scroll position.
+## Changelog
 
-```tsx
-// Pass false as third argument if restoring scroll position needs to be disabled
-export default withKeepAlive(IndexPage, 'my-index-page', false);
-```
+- **Version 1.0.5** - has a breaking change for `withKeepAlive` HOC. It now takes object as third argument instead of boolean. See more above.
 
 ## License
 
