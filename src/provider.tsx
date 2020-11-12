@@ -11,7 +11,7 @@
  * 1) Wrap nextjs <Component /> with <KeepAliveProvider> in _app.tsx
  * 2) Wrap components export with "withKeepAlive" and provide unique name like this: export default withKeepAlive(IndexPage, 'index');
  */
-import React, { useRef, memo, useEffect, ReactElement, cloneElement, Fragment } from 'react';
+import React, { useRef, memo, useEffect, ReactElement, cloneElement, Fragment, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NextRouter } from 'next/router';
 
@@ -61,6 +61,7 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
   const componentData = cloneElement(children);
   const CurrentComponent = componentData?.type;
   const keepAliveCache = useRef<KeepAliveCacheType>({});
+  const [, forceUpdate] = useState();
 
   const {
     name: keepAliveName,
@@ -109,12 +110,30 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
   };
 
   // Enable/disable loading from cache
-  const handleControls = (event: any) => {
+  const handleLoadFromCache = (event: any) => {
     const { name: controlsName, enabled: controlsEnabled } = event?.detail || {};
 
     if (keepAliveCache.current[controlsName]) {
       keepAliveCache.current[controlsName].enabled = controlsEnabled;
     }
+  };
+
+  // Drop cache
+  const handleDropCache = (event: any) => {
+    const { name: dropKeepAliveName, scrollToTop } = event?.detail || {};
+
+    // If no name, drop all cache
+    if (!dropKeepAliveName) {
+      keepAliveCache.current = {};
+    } else {
+      delete keepAliveCache.current?.[dropKeepAliveName];
+    }
+
+    if (scrollToTop && typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
+
+    forceUpdate({});
   };
 
   // Handle scroll position caching - requires an up-to-date router.asPath
@@ -152,10 +171,12 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
    * Listen to changes (enabled/disabled)
    */
   useEffect(() => {
-    window.addEventListener('keepAliveControls_LoadFromCache', handleControls);
+    window.addEventListener('keepAliveControls_LoadFromCache', handleLoadFromCache);
+    window.addEventListener('keepAliveControls_DropCache', handleDropCache);
 
     return () => {
-      window.removeEventListener('keepAliveControls_LoadFromCache', handleControls);
+      window.removeEventListener('keepAliveControls_LoadFromCache', handleLoadFromCache);
+      window.removeEventListener('keepAliveControls_DropCache', handleDropCache);
     };
   }, []);
 

@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 export function keepAliveLoadFromCache (name: string, enabled: boolean) {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(
@@ -6,6 +5,19 @@ export function keepAliveLoadFromCache (name: string, enabled: boolean) {
         detail: {
           name,
           enabled
+        }
+      })
+    );
+  }
+}
+
+export function keepAliveDropCache (name?: string, scrollToTop?: boolean) {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent('keepAliveControls_DropCache', {
+        detail: {
+          name,
+          scrollToTop
         }
       })
     );

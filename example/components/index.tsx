@@ -1,13 +1,5 @@
-import KeepAliveProviderImport from './provider';
-import withKeepAliveImport from './component';
-import {
-  useKeepAliveMountEffect as useKeepAliveMountEffectImport,
-  useKeepAliveUnmountEffect as useKeepAliveUnmountEffectImport
-} from './hooks';
-import { keepAliveLoadFromCache as keepAliveLoadFromCacheImport } from './controls';
+export { default as KeepAliveProvider } from './provider';
+export { default as withKeepAlive } from './component';
 
-export const KeepAliveProvider = KeepAliveProviderImport;
-export const withKeepAlive = withKeepAliveImport;
-export const useKeepAliveMountEffect = useKeepAliveMountEffectImport;
-export const useKeepAliveUnmountEffect = useKeepAliveUnmountEffectImport;
-export const keepAliveLoadFromCache = keepAliveLoadFromCacheImport;
+export { useKeepAliveMountEffect, useKeepAliveUnmountEffect } from './hooks';
+export { keepAliveLoadFromCache, keepAliveDropCache } from './controls';
