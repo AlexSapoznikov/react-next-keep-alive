@@ -162,6 +162,7 @@ This hook is accessible in any component, so you can use it for example in neste
 - **Version 1.0.5** - Has a breaking change for `withKeepAlive` HOC. It now takes object as third argument instead of boolean. See more above.
 - **Version 1.0.6** - Add *keepAliveDropCache*.
 - **Version 1.0.7** - Add identifiers to container and hidden components inside it.
+- **Version 1.0.8** - Change order - put keep-alive container as last in dom tree, so non-cached elements will be selected first when using querySelectors.
 
 ## License
 

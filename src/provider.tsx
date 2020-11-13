@@ -198,6 +198,8 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
   return (
     // eslint-disable-next-line react/jsx-fragments
     <Fragment>
+      { (!isKeptAlive || !isEnabled()) && children }
+
       <div style={{ display: (isKeptAlive && isEnabled()) ? 'block' : 'none' }}
            id="keep-alive-container"
            data-keepalivecontainer={true}
@@ -214,8 +216,6 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
           ))
         }
       </div>
-
-      { (!isKeptAlive || !isEnabled()) && children }
     </Fragment>
   );
 };
