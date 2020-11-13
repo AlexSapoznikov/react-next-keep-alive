@@ -95,6 +95,7 @@
     "jsx-a11y/no-noninteractive-element-interactions": "off"
   },
   "globals": {
-    "process": "readonly"
+    "process": "readonly",
+    "JSX": "readonly"
   }
 }

@@ -12,8 +12,7 @@
  * 2) Wrap components export with "withKeepAlive" and provide unique name like this: export default withKeepAlive(IndexPage, 'index');
  */
 import React, { useRef, memo, useEffect, ReactElement, cloneElement, Fragment, useState } from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { NextRouter } from 'next/router';
+import { NextRouter } from 'next/router'; // eslint-disable-line import/no-extraneous-dependencies
 
 type KeepAliveCacheType = {
   [name: string]: {
@@ -180,7 +179,7 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
     };
   }, []);
 
-  const getCachedViewProps = (cachedProps) => {
+  const getCachedViewProps = (cachedProps: Object) => {
     // Apply new props
     if (applyNewProps === true) {
       return pageProps;
@@ -210,8 +209,11 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
               key={cacheName}
               style={{ display: name === cacheName ? 'block' : 'none' }}
               data-keepalive={cacheName}
+              data-hidden={name !== cacheName}
             >
-              <Component {...getCachedViewProps(cachedProps)} />
+              <Component isHiddenByKeepAlive={name !== cacheName}
+                         {...getCachedViewProps(cachedProps)}
+              />
             </div>
           ))
         }

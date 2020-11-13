@@ -92,6 +92,33 @@ Name is a string or function that returns a string.
 
 ## Helpers
 
+#### props
+
+There are some props passed to component that is cached with `withKeepAlive` HOC.
+
+| prop  | type | Description |
+| :--- | :--- | :--- |
+| isHiddenByKeepAlive | *boolean* | Is `true` if component is currently cached and hidden in dom tree. <br />Is `false` if component is currently active |
+
+```tsx
+import React, { useState } from 'react';
+import { withKeepAlive } from 'react-next-keep-alive';
+
+const Example = (props) => {
+  const {
+    isHiddenByKeepAlive // This is true if component is currently hidden
+  } = props;
+
+  return (
+    <>
+      My index page
+    </>
+  );
+};
+
+export default withKeepAlive(Example, 'my-unique-name');
+```
+
 #### keepAliveLoadFromCache(name: string, enabled: boolean)
 
 If you want to disable loading component from cache, use this method. Pass unique name that you gave to the component and boolean value of enabled/disabled.
@@ -163,6 +190,7 @@ This hook is accessible in any component, so you can use it for example in neste
 - **Version 1.0.6** - Add *keepAliveDropCache*.
 - **Version 1.0.7** - Add identifiers to container and hidden components inside it.
 - **Version 1.0.8** - Change order - put keep-alive container as last in dom tree, so non-cached elements will be selected first when using querySelectors.
+- **Version 1.0.8** - Add component type in `withKeepAlive` HOC first argument, pass `isHiddenByKeepAlive` property to component so user knows if this component is currently cached and hidden if needed.
 
 ## License
 
