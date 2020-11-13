@@ -191,6 +191,7 @@ This hook is accessible in any component, so you can use it for example in neste
 - **Version 1.0.7** - Add identifiers to container and hidden components inside it.
 - **Version 1.0.8** - Change order - put keep-alive container as last in dom tree, so non-cached elements will be selected first when using querySelectors.
 - **Version 1.0.8** - Add component type in `withKeepAlive` HOC first argument, pass `isHiddenByKeepAlive` property to component so user knows if this component is currently cached and hidden if needed.
+- **Version 1.0.9** - Add `isHiddenByKeepAlive` prop to cached component.
 
 ## License
 
