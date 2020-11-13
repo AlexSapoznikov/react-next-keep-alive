@@ -198,16 +198,17 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
   return (
     // eslint-disable-next-line react/jsx-fragments
     <Fragment>
-      <div style={{ display: (isKeptAlive && isEnabled()) ? 'block' : 'none' }}>
+      <div style={{ display: (isKeptAlive && isEnabled()) ? 'block' : 'none' }}
+           id="keep-alive-container"
+           data-keepalivecontainer={true}
+      >
         {
           Object.entries(keepAliveCache.current).map(([cacheName, { Component, pageProps: cachedProps }]: any) => (
             <div
               key={cacheName}
               style={{ display: name === cacheName ? 'block' : 'none' }}
+              data-keepalive={cacheName}
             >
-              {
-
-              }
               <Component {...getCachedViewProps(cachedProps)} />
             </div>
           ))
