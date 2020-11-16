@@ -1,4 +1,4 @@
-import React, { ReactElement, Fragment, ComponentType } from 'react';
+import React, { ReactElement, Fragment } from 'react';
 import { NextComponentType } from 'next'; // eslint-disable-line import/no-extraneous-dependencies
 import { KeepAliveName, KeepAliveOptsProps } from './provider';
 
@@ -11,7 +11,11 @@ const defaultOpts: KeepAliveOptsProps = {
   applyNewProps: false
 };
 
-const withKeepAlive = (Component: ComponentType & NextComponentType, name: KeepAliveName, opts: KeepAliveOptsProps = defaultOpts) => {
+const withKeepAlive = (
+  Component: NextComponentType & ((props?: Object) => JSX.Element),
+  name: KeepAliveName,
+  opts: KeepAliveOptsProps = defaultOpts
+) => {
   const KeepAlive = (props: KeepAliveProps) => (
     // eslint-disable-next-line react/jsx-fragments
     <Fragment>
