@@ -1,5 +1,4 @@
 import React, { ReactElement, Fragment } from 'react';
-import { NextComponentType } from 'next'; // eslint-disable-line import/no-extraneous-dependencies
 import { KeepAliveName, KeepAliveOptsProps } from './provider';
 
 type KeepAliveProps = {
@@ -12,7 +11,7 @@ const defaultOpts: KeepAliveOptsProps = {
 };
 
 const withKeepAlive = (
-  Component: NextComponentType & ((props?: Object) => JSX.Element),
+  Component: ((props?: Object) => JSX.Element),
   name: KeepAliveName,
   opts: KeepAliveOptsProps = defaultOpts
 ) => {
@@ -24,7 +23,9 @@ const withKeepAlive = (
   );
 
   // Copy getInitial props so it will run as well
+  // @ts-ignore
   if (Component.getInitialProps) {
+    // @ts-ignore
     KeepAlive.getInitialProps = Component.getInitialProps;
   }
 
