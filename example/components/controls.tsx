@@ -11,7 +11,7 @@ export function keepAliveLoadFromCache (name: string, enabled: boolean) {
   }
 }
 
-export function keepAliveDropCache (name?: string, scrollToTop?: boolean) {
+export function keepAliveDropCache (name?: string | ((cacheKeys: string[]) => string | string[]), scrollToTop?: boolean) {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(
       new CustomEvent('keepAliveControls_DropCache', {

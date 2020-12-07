@@ -142,13 +142,13 @@ const IndexPage = () => {
 export default withKeepAlive(IndexPage, 'my-index-page');
 ```
 
-#### keepAliveDropCache(name?: string, scrollToTop: boolean)
+#### keepAliveDropCache(name?: string | ((cacheKeys: string[]) => string | string[]), scrollToTop: boolean)
 
-You can remove component from cache and scroll window to top with this function.
+You can remove component(s) from cache and scroll window to top with this function.
 
-Pass in components unique name to remove it from cache.
-
-Do not pass in components unique name if you want to clear all cached components.
+- To remove all components from cache, do not pass any name.
+- To remove single component from cache, pass in components name
+- To remove multiple components, pass in a function which takes in array of cache keys and returns a single key or array of keys that will be removed.
 
 You can import it like this: `import { keepAliveDropCache } from 'react-next-keep-alive'`
 
@@ -193,6 +193,7 @@ This hook is accessible in any component, so you can use it for example in neste
 - **Version 1.0.8** - Add component type in `withKeepAlive` HOC first argument, pass `isHiddenByKeepAlive` property to component so user knows if this component is currently cached and hidden if needed.
 - **Version 1.0.9** - Add `isHiddenByKeepAlive` prop to cached component.
 - **Version 1.0.11** - Update component type.
+- **Version 1.0.12** - `keepAliveDropCache` is now able to remove multiple caches.
 
 ## License
 

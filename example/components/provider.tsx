@@ -60,7 +60,7 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
   const componentData = cloneElement(children);
   const CurrentComponent = componentData?.type;
   const keepAliveCache = useRef<KeepAliveCacheType>({});
-  const [, forceUpdate] = useState();
+  const [, forceUpdate] = useState<any>();
 
   const {
     name: keepAliveName,
@@ -124,8 +124,16 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
     // If no name, drop all cache
     if (!dropKeepAliveName) {
       keepAliveCache.current = {};
-    } else {
+    } else if (typeof dropKeepAliveName === 'string') {
       delete keepAliveCache.current?.[dropKeepAliveName];
+    } else if (typeof dropKeepAliveName === 'function') {
+      const caches = dropKeepAliveName?.(Object.keys(keepAliveCache.current));
+      const cachesToRemove: string[] = Array.isArray(caches) ? caches : [caches];
+
+      // eslint-disable-next-line no-unused-expressions
+      cachesToRemove
+        ?.filter(exists => exists)
+        ?.forEach(cacheName => delete dropKeepAliveName?.[cacheName]);
     }
 
     if (scrollToTop && typeof window !== 'undefined') {
@@ -209,7 +217,7 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
               key={cacheName}
               style={{ display: name === cacheName ? 'block' : 'none' }}
               data-keepalive={cacheName}
-              data-hidden={name !== cacheName}
+              data-keepalive-hidden={name !== cacheName}
             >
               <Component isHiddenByKeepAlive={name !== cacheName}
                          {...getCachedViewProps(cachedProps)}
