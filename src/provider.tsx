@@ -133,7 +133,7 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
       // eslint-disable-next-line no-unused-expressions
       cachesToRemove
         ?.filter(exists => exists)
-        ?.forEach(cacheName => delete dropKeepAliveName?.[cacheName]);
+        ?.forEach(cacheName => delete keepAliveCache.current?.[cacheName]);
     }
 
     if (scrollToTop && typeof window !== 'undefined') {
