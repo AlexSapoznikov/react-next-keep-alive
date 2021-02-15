@@ -11,7 +11,7 @@
  * 1) Wrap nextjs <Component /> with <KeepAliveProvider> in _app.tsx
  * 2) Wrap components export with "withKeepAlive" and provide unique name like this: export default withKeepAlive(IndexPage, 'index');
  */
-import React, { useRef, memo, useEffect, ReactElement, cloneElement, Fragment, useState } from 'react';
+import React, { useRef, memo, useEffect, ReactElement, cloneElement, Fragment, useState, EffectCallback } from 'react';
 import { NextRouter } from 'next/router'; // eslint-disable-line import/no-extraneous-dependencies
 
 type KeepAliveCacheType = {
@@ -202,6 +202,19 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
     return cachedProps;
   };
 
+  /**
+   * Custom useEffect which runs only when component alive.
+   */
+  const getKeepAliveEffect = (isHidden: boolean) => {
+    const useKeepAliveEffect = (effect: EffectCallback, deps?: any[]) => useEffect(() => {
+      if (!isHidden) {
+        return effect();
+      }
+    }, deps);
+
+    return useKeepAliveEffect;
+  };
+
   return (
     // eslint-disable-next-line react/jsx-fragments
     <Fragment>
@@ -220,6 +233,7 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
               data-keepalive-hidden={name !== cacheName}
             >
               <Component isHiddenByKeepAlive={name !== cacheName}
+                         useEffect={getKeepAliveEffect(name !== cacheName)}
                          {...getCachedViewProps(cachedProps)}
               />
             </div>
