@@ -99,6 +99,7 @@ There are some props passed to component that is cached with `withKeepAlive` HOC
 | prop  | type | Description |
 | :--- | :--- | :--- |
 | isHiddenByKeepAlive | *boolean* | Is `true` if component is currently cached and hidden in dom tree. <br />Is `false` if component is currently active |
+| useEffect | Function | Works as original useEffect but only when component is visible. You should use that instead of original useEffect unless you know what you are doing.
 
 ```tsx
 import React, { useState } from 'react';
@@ -106,8 +107,17 @@ import { withKeepAlive } from 'react-next-keep-alive';
 
 const Example = (props) => {
   const {
-    isHiddenByKeepAlive // This is true if component is currently hidden
+    isHiddenByKeepAlive, // This is true if component is currently hidden,
+    useEffect
   } = props;
+
+  useEffect(() => {
+    // Runs only when cached component visible
+
+    return () => {
+      // Cleanup
+    }
+  }, [dep1, dep2, ...])
 
   return (
     <>
@@ -194,6 +204,7 @@ This hook is accessible in any component, so you can use it for example in neste
 - **Version 1.0.9** - Add `isHiddenByKeepAlive` prop to cached component.
 - **Version 1.0.11** - Update component type.
 - **Version 1.0.12** - `keepAliveDropCache` is now able to remove multiple caches.
+- **Version 1.0.14** - `useEffect` is now passed to component which uses `withKeepAlive`, which runs only when current component is visible. You should prefer using that instead of original useEffect.
 
 ## License
 
