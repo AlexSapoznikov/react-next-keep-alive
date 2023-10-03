@@ -92,7 +92,7 @@ const KeepAliveProvider = (props: KeepAliveProviderProps) => {
 
   // Save the scroll position of current page before leaving
   const handleRouteChangeStart = () => {
-    if (isKeptAlive) {
+    if (isKeptAlive && keepAliveCache?.current?.[name]) {
       keepAliveCache.current[name].scrollPos = window.scrollY;
     }
   };
