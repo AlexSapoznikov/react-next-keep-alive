@@ -1,6 +1,6 @@
 {
   "name": "react-next-keep-alive",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Module for caching views in next.js",
   "author": "https://github.com/AlexSapoznikov/react-next-keep-alive",
   "license": "MIT",
